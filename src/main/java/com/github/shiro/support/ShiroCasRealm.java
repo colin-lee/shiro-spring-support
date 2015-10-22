@@ -107,17 +107,11 @@ public class ShiroCasRealm extends CasRealm {
     }
   }
 
-  /**
-   * 更新用户授权信息缓存.
-   */
   public void clearCachedAuthorizationInfo(String principal) {
     SimplePrincipalCollection principals = new SimplePrincipalCollection(principal, getName());
     clearCachedAuthorizationInfo(principals);
   }
 
-  /**
-   * 清除所有用户授权信息缓存.
-   */
   public void clearAllCachedAuthorizationInfo() {
     Cache<Object, AuthorizationInfo> cache = getAuthorizationCache();
     if (cache != null) {
