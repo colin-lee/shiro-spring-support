@@ -80,21 +80,7 @@ public class ShiroCasRealm extends CasRealm {
 
   @Override
   protected TicketValidator createTicketValidator() {
-    try {
-      String urlPrefix = getCasServerUrlPrefix();
-      if ("saml".equalsIgnoreCase(getValidationProtocol())) {
-        final Saml11TicketValidator validator = new Saml11TicketValidator(urlPrefix);
-        /**
-         * 默认1000ms，太短了，测试联调的时候老是验证失败
-         */
-        validator.setTolerance(24 * 3600 * 1000);
-        return validator;
-      }
-      return new Cas20ServiceTicketValidator(urlPrefix);
-    } catch (Exception e) {
-      LOG.error("cannot createTicketValidator: {}", getCasServerUrlPrefix());
-    }
-    return null;
+    return new Cas30ServiceTicketValidator(getCasServerUrlPrefix());
   }
 
   public void logout() {
@@ -107,11 +93,13 @@ public class ShiroCasRealm extends CasRealm {
     }
   }
 
+  /* 更新用户授权信息缓存 */
   public void clearCachedAuthorizationInfo(String principal) {
     SimplePrincipalCollection principals = new SimplePrincipalCollection(principal, getName());
     clearCachedAuthorizationInfo(principals);
   }
 
+  /* 清除所有用户授权信息缓存 */
   public void clearAllCachedAuthorizationInfo() {
     Cache<Object, AuthorizationInfo> cache = getAuthorizationCache();
     if (cache != null) {
